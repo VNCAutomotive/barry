@@ -24,13 +24,13 @@
 #include <fuse_opt.h>
 
 #include <barry/barry.h>
+#include <barry/tr1_support.h>
 #include <sstream>
 #include <vector>
 #include <list>
 #include <string>
 #include <stdexcept>
 #include <memory>
-#include <tr1/memory>
 #include <errno.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -41,7 +41,7 @@
 #include "barrygetopt.h"
 
 using namespace std;
-using namespace std::tr1;
+using namespace Barry::tr1;
 using namespace Barry;
 
 // Global filenames
@@ -491,7 +491,7 @@ public:
 class DesktopCon : public Directory
 {
 public:
-	typedef std::tr1::shared_ptr<Database>			DatabasePtr;
+	typedef Barry::tr1::shared_ptr<Database>			DatabasePtr;
 	typedef std::list<DatabasePtr>				DBList;
 public:
 	Barry::Controller m_con;
@@ -548,7 +548,7 @@ class Context : public Directory, public File
 {
 public:
 	typedef std::auto_ptr<Barry::Probe>			ProbePtr;
-	typedef std::tr1::shared_ptr<DesktopCon>		DesktopConPtr;
+	typedef Barry::tr1::shared_ptr<DesktopCon>		DesktopConPtr;
 	typedef std::string					PinT;
 	typedef std::map<PinT, DesktopConPtr>			PinMap;
 

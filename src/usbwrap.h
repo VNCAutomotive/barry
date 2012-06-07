@@ -27,10 +27,10 @@
 #include "dll.h"
 
 #include <memory>
-#include <tr1/memory>
 #include <vector>
 #include <map>
 #include "error.h"
+#include "tr1_support.h"
 
 #define USBWRAP_DEFAULT_TIMEOUT	30000
 
@@ -82,7 +82,7 @@ class DeviceIDImpl;
 class BXEXPORT DeviceID
 {
 public:
-	std::tr1::shared_ptr<DeviceIDImpl> m_impl;
+	Barry::tr1::shared_ptr<DeviceIDImpl> m_impl;
 public:
 	// Takes ownership of impl
 	DeviceID(DeviceIDImpl* impl = NULL);

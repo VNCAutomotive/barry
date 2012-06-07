@@ -22,6 +22,7 @@
 #include <barry/barry.h>
 #include <barry/barrysync.h>
 #include <barry/barrybackup.h>
+#include <barry/tr1_support.h>
 
 #include "brecsum.h"
 #include "util.h"
@@ -34,14 +35,13 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
-#include <tr1/memory>
 #include <strings.h>
 #include <unistd.h>
 
 #include "barrygetopt.h"
 
 using namespace std;
-using namespace std::tr1;
+using namespace Barry::tr1;
 using namespace Barry;
 
 // keeping a record of all the -i device / -o device pin numbers, so

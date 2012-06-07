@@ -164,7 +164,8 @@ include_barry_HEADERS = barry.h barrysync.h barrybackup.h barryalx.h \
 	connector.h \
 	trim.h \
 	fifoargs.h \
-	tzwrapper.h
+	tzwrapper.h \
+	tr1_support.h
 
 noinst_HEADERS = cbarry.h \
 	base64.h \

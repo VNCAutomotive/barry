@@ -51,7 +51,6 @@
 #include <string>
 #include <algorithm>
 #include <stdlib.h>
-#include <tr1/memory>
 #include "i18n.h"
 #include "util.h"
 #include "boostwrap.h"
@@ -59,8 +58,8 @@
 #include "barrygetopt.h"
 
 using namespace std;
-using namespace std::tr1;
 using namespace Barry;
+using namespace Barry::tr1;
 
 std::map<std::string, std::string> SortKeys;
 

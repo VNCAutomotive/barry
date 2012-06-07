@@ -30,7 +30,7 @@
 #include "dll.h"
 #include "a_application.h"
 #include "a_library.h"
-#include <tr1/memory>
+#include "tr1_support.h"
 
 
 #define OS_LANG_ENGLISH			""
@@ -54,7 +54,7 @@ namespace ALX {
 class BXEXPORT OSLoader
 {
 public:
-	typedef std::tr1::shared_ptr<CODSection>	CODSectionPtr;
+	typedef Barry::tr1::shared_ptr<CODSection>	CODSectionPtr;
 	typedef std::vector<CODSectionPtr>		CODSectionList;
 	typedef std::map<std::string, std::string>	PropertyMap;
 

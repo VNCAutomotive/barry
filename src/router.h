@@ -25,12 +25,12 @@
 #include "dll.h"
 #include <stdint.h>
 #include <map>
-#include <tr1/memory>
 #include <stdexcept>
 #include <pthread.h>
 #include "dataqueue.h"
 #include "error.h"
 #include "usbwrap.h"
+#include "tr1_support.h"
 
 namespace Barry {
 
@@ -63,7 +63,7 @@ public:
 		virtual ~SocketDataHandler();
 	};
 
-	typedef std::tr1::shared_ptr<SocketDataHandler> SocketDataHandlerPtr;
+	typedef Barry::tr1::shared_ptr<SocketDataHandler> SocketDataHandlerPtr;
 
 	// Simple wrapper template class for SocketDataHandler which provides a basic data recieved callback
 	template<typename T> class SimpleSocketDataHandler : public SocketDataHandler
@@ -90,7 +90,7 @@ public:
 			: m_handler(h)
 			{}
 	};
-	typedef std::tr1::shared_ptr<QueueEntry>	QueueEntryPtr;
+	typedef Barry::tr1::shared_ptr<QueueEntry>	QueueEntryPtr;
 	typedef uint16_t				SocketId;
 	typedef std::map<SocketId, QueueEntryPtr>	SocketQueueMap;
 

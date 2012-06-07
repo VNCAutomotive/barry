@@ -21,10 +21,10 @@
 
 #include <barry/barry.h>
 #include <barry/barrybackup.h>
+#include <barry/tr1_support.h>
 
 #include <iostream>
 #include <iomanip>
-#include <tr1/memory>
 #include <string>
 #include <vector>
 #include <map>
@@ -35,7 +35,7 @@
 #include "util.h"
 
 using namespace std;
-using namespace std::tr1;
+using namespace Barry::tr1;
 using namespace Barry;
 
 /*
