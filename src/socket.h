@@ -138,6 +138,7 @@ public:
 	virtual void Receive(Data &receive, int timeout = -1) = 0;
 
 	virtual void RegisterInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler = Barry::SocketRoutingQueue::SocketDataHandlerPtr()) = 0;
+	virtual void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler) = 0;
 	virtual void UnregisterInterest() = 0;
 
 	void ResetOnClose(bool reset = true) { m_resetOnClose = reset; }
@@ -238,6 +239,7 @@ public:
 	// If you wish to re-register, call UnregisterInterest() first,
 	// which is safe to call as many times as you like.
 	void RegisterInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler = Barry::SocketRoutingQueue::SocketDataHandlerPtr());
+	void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler);
 	void UnregisterInterest() { LocalUnregisterInterest(); }
 };
 

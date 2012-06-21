@@ -204,6 +204,13 @@ public:
 	// for this socket will be placed in the default queue.
 	void UnregisterInterest(SocketId socket);
 
+	// Updates the callback to use for data from a certain socket.
+	// This functions similar to calling UnregisterInterest() followed by
+	// RegisterInterest() but will not lose any queued data if the previous
+	// handler was null.
+	// If not null, handler is called when new data is read.
+	void TransferInterest(SocketId socket, SocketDataHandlerPtr handler);
+
 	// Reads data from the interested socket cache.  Can only read
 	// from sockets that have been previously registered.
 	// Blocks until timeout or data is available.

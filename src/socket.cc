@@ -1117,6 +1117,20 @@ void Socket::RegisterInterest(SocketRoutingQueue::SocketDataHandlerPtr handler)
 	m_registered = true;
 }
 
+void Socket::TransferInterest(SocketRoutingQueue::SocketDataHandlerPtr handler)
+{
+	if( !m_zero->m_queue )
+		throw std::logic_error("SocketRoutingQueue required in SocketZero in order to call Socket::RegisterInterest()");
+
+	if( !m_registered ) {
+		std::ostringstream oss;
+		oss << "Socket (" << m_socket << ") not previously registered in Socket::TransferInterest()!";
+		throw std::logic_error(oss.str());
+	}
+
+	m_zero->m_queue->TransferInterest(m_socket, handler);
+}
+
 
 } // namespace Barry
 

@@ -375,6 +375,49 @@ void SocketRoutingQueue::UnregisterInterest(SocketId socket)
 }
 
 //
+// TransferInterest
+//
+/// Updates the callback to use for data from a certain socket.
+/// This functions similar to calling UnregisterInterest() followed by
+/// RegisterInterest() but will not lose any queued data if the previous
+/// handler was null.
+/// If not null, handler is called when new data is read.
+void SocketRoutingQueue::TransferInterest(SocketId socket, SocketDataHandlerPtr handler)
+{
+	// modifying our own std::map, need a lock
+	scoped_lock lock(m_mutex);
+
+	SocketQueueMap::iterator qi = m_socketQueues.find(socket);
+	if( qi == m_socketQueues.end() )
+		throw std::logic_error("TransferInterest requires a previously registered socket.");
+
+	qi->second->m_handler = handler;
+	// dispatch any queued handlers
+	QueueEntryPtr queue = qi->second;
+	Data* nextData = queue->m_queue.pop();
+	while( queue &&
+		   nextData )
+	{
+		// unlock & let the handler process it
+		lock.unlock();
+		qi->second->m_handler->DataReceived(*nextData);
+		ReturnBuffer(nextData);
+		lock.lock(m_mutex);
+		qi = m_socketQueues.find(socket);
+		if( qi != m_socketQueues.end() )
+		{
+			queue = qi->second;
+			nextData = queue->m_queue.pop();
+		}
+		else
+		{
+			queue.reset();
+			nextData = NULL;
+		}
+	}
+}
+
+//
 // SocketRead
 //
 /// Reads data from the interested socket cache.  Can only read

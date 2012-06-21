@@ -144,8 +144,7 @@ void RawChannel::OnOpen()
 	if( m_callback ) {
 		SocketRoutingQueue::SocketDataHandlerPtr callback;
 		callback.reset(new RawChannelSocketHandler(*this));
-		m_socket->UnregisterInterest();
-		m_socket->RegisterInterest(callback);
+		m_socket->TransferInterest(callback);
 	}
 	else {
 		// sockets already register themselves by default,
