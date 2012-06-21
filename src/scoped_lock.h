@@ -32,10 +32,9 @@ class scoped_lock
 
 public:
 	scoped_lock(pthread_mutex_t &mutex)
-		: m_mutex(&mutex)
+		: m_mutex(NULL)
 	{
-		while( pthread_mutex_lock(m_mutex) != 0 )
-			;
+		lock(mutex);
 	}
 
 	~scoped_lock()
@@ -49,6 +48,14 @@ public:
 			pthread_mutex_unlock(m_mutex);
 			m_mutex = 0;
 		}
+	}
+
+	void lock(pthread_mutex_t &mutex)
+	{
+		unlock();
+		m_mutex = &mutex;
+		while( pthread_mutex_lock(m_mutex) != 0 )
+			;
 	}
 };
 
