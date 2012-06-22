@@ -121,6 +121,12 @@ bool SocketRoutingQueue::QueuePacket(SocketId socket, DataHandle &buf)
 		// search for registration of socket
 		SocketQueueMap::iterator qi = m_socketQueues.find(socket);
 		if( qi != m_socketQueues.end() ) {
+			if( Protocol::IsSequencePacket(*buf.get()) &&
+					( qi->second->m_type & SequencePackets ) == 0 )
+				return false;
+			if( !Protocol::IsSequencePacket(*buf.get()) &&
+					( qi->second->m_type & DataPackets ) == 0 )
+				return false;
 			qi->second->m_queue.push(buf.release());
 			return true;
 		}
@@ -332,7 +338,8 @@ DataHandle SocketRoutingQueue::DefaultRead(int timeout)
 /// Throws std::logic_error if already registered.
 ///
 void SocketRoutingQueue::RegisterInterest(SocketId socket,
-					  SocketDataHandlerPtr handler)
+					  SocketDataHandlerPtr handler,
+					  InterestType type)
 {
 	// modifying our own std::map, need a lock
 	scoped_lock lock(m_mutex);
@@ -341,8 +348,20 @@ void SocketRoutingQueue::RegisterInterest(SocketId socket,
 	if( qi != m_socketQueues.end() )
 		throw std::logic_error("RegisterInterest requesting a previously registered socket.");
 
-	m_socketQueues[socket] = QueueEntryPtr( new QueueEntry(handler) );
+	m_socketQueues[socket] = QueueEntryPtr( new QueueEntry(handler, type) );
 	m_interest = true;
+}
+
+//
+// RegisterInterest
+//
+/// This behaves like RegisterInterest(SocketId, SocketDataHandlerPtr, InterestType)
+/// but defaults to an InterestType of SequenceAndDataPackets
+///
+void SocketRoutingQueue::RegisterInterest(SocketId socket,
+					  SocketDataHandlerPtr handler)
+{
+	RegisterInterest(socket, handler, SequenceAndDataPackets);
 }
 
 //
@@ -415,6 +434,24 @@ void SocketRoutingQueue::TransferInterest(SocketId socket, SocketDataHandlerPtr 
 			nextData = NULL;
 		}
 	}
+}
+
+//
+// ChangeInterest
+//
+/// Changes the type of data that a client is interested in for a certain socket.
+/// Interest in the socket must have previously been registered by a call
+/// to RegisterInterest().
+void SocketRoutingQueue::ChangeInterest(SocketId socket, InterestType type)
+{
+	// modifying our own std::map, need a lock
+	scoped_lock lock(m_mutex);
+
+	SocketQueueMap::iterator qi = m_socketQueues.find(socket);
+	if( qi == m_socketQueues.end() )
+		throw std::logic_error("ChangeInterest requires a previously registered socket.");
+
+	qi->second->m_type = type;
 }
 
 //

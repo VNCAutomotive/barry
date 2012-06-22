@@ -138,8 +138,13 @@ public:
 	virtual void Receive(Data &receive, int timeout = -1) = 0;
 
 	virtual void RegisterInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler = Barry::SocketRoutingQueue::SocketDataHandlerPtr()) = 0;
-	virtual void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler) = 0;
 	virtual void UnregisterInterest() = 0;
+	virtual void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler) = 0;
+
+	// Used to notify the socket when the connection is being opened
+	virtual void Opening() = 0;
+	// Used to notify the socket when the connection has been successfully opened
+	virtual void Opened() = 0;
 
 	void ResetOnClose(bool reset = true) { m_resetOnClose = reset; }
 	bool IsResetOnClose() const { return m_resetOnClose; }
@@ -239,8 +244,11 @@ public:
 	// If you wish to re-register, call UnregisterInterest() first,
 	// which is safe to call as many times as you like.
 	void RegisterInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler = Barry::SocketRoutingQueue::SocketDataHandlerPtr());
-	void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler);
 	void UnregisterInterest() { LocalUnregisterInterest(); }
+	void TransferInterest(Barry::SocketRoutingQueue::SocketDataHandlerPtr handler);
+
+	void Opening();
+	void Opened();
 };
 
 
